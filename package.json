@@ -1,0 +1,16 @@
+{
+  "name": "demonodejs",
+  "version": "1.0.0",
+  "description": "web app use html/css/bootstrap/nodejs/express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "khiem.ta",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3",
+    "mongoose": "^4.11.1",
+    "pug": "^2.0.0-rc.2"
+  }
+}
