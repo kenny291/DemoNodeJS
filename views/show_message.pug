@@ -1,12 +1,10 @@
-doctype
-html
-   head
-      title Person
-   body
+extends layout
+block content
+      include nav.pug
       if(type == "error")
          h3(style = "color:red") #{message}
       else
-         h3 New person, 
-            name: #{person.name}, 
-            age: #{person.age} and 
-            nationality: #{person.nationality} added!
+         h3 New person,
+            p name: #{person.name},
+            p age: #{person.age} and
+            p nationality: #{person.nationality} added!

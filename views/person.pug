@@ -1,20 +1,26 @@
 extends layout
 block content
-   head
-      title Person
-      body
-         form(action = "/person", method = "POST")
-         div
-            label(for = "name") Name: 
-            input(name = "name")
-         br
-         div
-            label(for = "age") Age: 
-            input(name = "age")
-         br
-         div
-            label(for = "nationality") Nationality: 
-            input(name = "nationality")
-         br
-         button(type = "submit") Create new person
-         form(show_message.pug) 
+      include nav.pug
+      .container
+            h3 Add new user
+            h3 Add new user
+            form(action = "/person", method = "POST")
+               div.form-group
+                  label(for = "name") Name
+                  br
+                  input(name = "name", placeholder="Enter your username")
+               div.form-group
+                  label(for = "age") Age:
+                  br
+                  input(name = "age")
+               div.form-group
+                  label(for = "nationality") Nationality
+                  br
+                  input(name = "nationality")
+                  // type="password"
+               button.btn.btn-primary(type='submit', class="btn btn-default") Create new person
+
+            if errors 
+              ul
+                 for error in errors
+                   li!= error.msg
