@@ -1,9 +1,14 @@
 let express = require('express');
 let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
+let dbStatus;
 
 let app = express();
 mongoose.connect('mongodb://localhost/mydb', {useMongoClient: true});
+mongoose.connection.on('error', (err) => {
+	console.log("Connect DB failed!")
+	dbStatus = false
+});
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -17,7 +22,10 @@ let Person = mongoose.model("Person", personSchema);
 app.set('view engine', 'pug');
 
 app.get('/', function(req, res){
-   res.render('person');
+	if (dbStatus == false)
+		res.send("Connect to DB failed")
+	else
+		res.render('person');
 });
 app.get('/person', function(req, res){
    res.render('person');
@@ -27,13 +35,16 @@ app.get('/login', function(req, res){
    res.render('login');
 });
 
-app.get('/all-users', function(req, res){
-      users = Person.find((err, response) => {
-            console.log(response);
-            if(err) res.json({message: "Error in get database"});
+app.get('/all-users', (req, res) =>{
+      Person.find((err, response) => {
+			console.log(response)
+            if(err) res.send("Error in get database");
+			else{
+				console.log(response)
+				res.render('all-users', {users:response});
+			}
       });
-      // console.log(users)
-      res.render('all-users', {users:users});
+      
 });
 
 app.post('/person', function(req, res){
