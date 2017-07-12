@@ -1,0 +1,10 @@
+extends layout
+block content
+	include nav.pug
+	.container
+		h2 List all current users
+		h3 #{users}
+		ul.list-group
+			each user in users
+				li.list-group-item user.name
+					span.badge Normal user

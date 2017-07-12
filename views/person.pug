@@ -10,14 +10,9 @@ block content
                   br
                   input(name = "name", placeholder="Enter your username")
                div.form-group
-                  label(for = "age") Age:
+                  label(for = "password") Password
                   br
-                  input(name = "age")
-               div.form-group
-                  label(for = "nationality") Nationality
-                  br
-                  input(name = "nationality")
-                  // type="password"
+                  input(name = "pwd",  type="password")
                button.btn.btn-primary(type='submit', class="btn btn-default") Create new person
 
             if errors 
