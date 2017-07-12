@@ -28,10 +28,12 @@ app.get('/login', function(req, res){
 });
 
 app.get('/all-users', function(req, res){
-      let users = Person.find(function(err, response){console.log(response);});
-      res.send(users);
+      users = Person.find((err, response) => {
+            console.log(response);
+            if(err) res.json({message: "Error in get database"});
+      });
       // console.log(users)
-      // res.render('all-users', {users:users});
+      res.render('all-users', {users:users});
 });
 
 app.post('/person', function(req, res){
