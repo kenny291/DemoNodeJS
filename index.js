@@ -1,42 +1,41 @@
 let express = require('express');
 let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
-let dbStatus;
 
 let app = express();
-mongoose.connect('mongodb://localhost/mydb', {useMongoClient: true});
-mongoose.connection.on('error', (err) => {
-	console.log("Connect DB failed!")
-	dbStatus = false
-});
 
+app.set('view engine', 'pug');
+
+// DB process
+mongoose.connect('mongodb://localhost/mydb', {useMongoClient: true});
+let personSchema = mongoose.Schema(
+	{
+	   name: String,
+	   pwd: String,
+	}
+);
+let Person = mongoose.model("Person", personSchema);
+
+// Accept Post
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(express.static('public'));
 
-let personSchema = mongoose.Schema({
-   name: String,
-   pwd: String,
-});
-let Person = mongoose.model("Person", personSchema);
-app.set('view engine', 'pug');
-
+//Routes
 app.get('/', (req, res) => {
-	if (dbStatus == false)
-		res.send("Connect to DB failed")
-	else
-		res.render('person');
-});
+	res.render('person')
+	}
+);
 app.get('/person', (req, res) => {
-   res.render('person');
-});
-
+	res.render('person');
+	}
+);
 app.get('/login', (req, res) => {
-   res.render('login');
-});
-
-app.get('/all-users', (req, res) => {
-      Person.find((err, response) => {
+	res.render('login');
+	}
+);
+app.get('/all-users', (req, res) =>{
+	/*Person.find((err, response) => {
 			console.log(response)
             if(err) res.send("Error in get database");
 			else{
@@ -44,10 +43,12 @@ app.get('/all-users', (req, res) => {
 				res.render('all-users', {users:response});
 			}
       });
-      
-});
+	  */
+	  res.render('all-users', {users:[{"name": "u1"}]});     
+	}
+);
 
-app.post('/person', (req, res) => {
+app.post('/person', function(req, res){
    let personInfo = req.body; //Get the parsed information
    console.log(personInfo)
 
@@ -61,7 +62,7 @@ app.post('/person', (req, res) => {
          pwd: personInfo.pwd,
       });
 		
-      newPerson.save((err, Person) => {
+      newPerson.save(function(err, Person){
          if(err){
             console.log(err)
             res.render('show_message', {message: "Database error: %s" % err, type: "error"});
@@ -73,4 +74,8 @@ app.post('/person', (req, res) => {
    }
 });
 
-app.listen(3000);
+mongoose.connection.on('error', (err) => {
+	if (err)	console.log("Connect to DB failed")
+	else	app.listen(3000)
+	}
+)
