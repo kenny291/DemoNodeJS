@@ -1,10 +1,10 @@
 extends layout
 block content
 	include nav.pug
-	.container
+	main.container
 		h2 List all current users
-		h3 #{users[1]}
 		ul.list-group
 			each user in users
-				li.list-group-item user.name
+				// note for equal sign
+				li.list-group-item= user.name
 					span.badge Normal user
