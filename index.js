@@ -21,21 +21,21 @@ let personSchema = mongoose.Schema({
 let Person = mongoose.model("Person", personSchema);
 app.set('view engine', 'pug');
 
-app.get('/', function(req, res){
+app.get('/', (req, res) => {
 	if (dbStatus == false)
 		res.send("Connect to DB failed")
 	else
 		res.render('person');
 });
-app.get('/person', function(req, res){
+app.get('/person', (req, res) => {
    res.render('person');
 });
 
-app.get('/login', function(req, res){
+app.get('/login', (req, res) => {
    res.render('login');
 });
 
-app.get('/all-users', (req, res) =>{
+app.get('/all-users', (req, res) => {
       Person.find((err, response) => {
 			console.log(response)
             if(err) res.send("Error in get database");
@@ -47,7 +47,7 @@ app.get('/all-users', (req, res) =>{
       
 });
 
-app.post('/person', function(req, res){
+app.post('/person', (req, res) => {
    let personInfo = req.body; //Get the parsed information
    console.log(personInfo)
 
@@ -61,7 +61,7 @@ app.post('/person', function(req, res){
          pwd: personInfo.pwd,
       });
 		
-      newPerson.save(function(err, Person){
+      newPerson.save((err, Person) => {
          if(err){
             console.log(err)
             res.render('show_message', {message: "Database error: %s" % err, type: "error"});
