@@ -9,11 +9,11 @@ app.set('view engine', 'pug');
 // DB process
 mongoose.connect('mongodb://localhost/mydb', {useMongoClient: true});
 let personSchema = mongoose.Schema(
-	{
+      {
 	   name: String,
 	   pwd: String,
 	}
-);
+)
 let Person = mongoose.model("Person", personSchema);
 
 // Accept Post
@@ -22,33 +22,30 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(express.static('public'));
 
 //Routes
-app.get('/', (req, res) => {
-	res.render('person')
-	}
-);
-app.get('/person', (req, res) => {
-	res.render('person');
-	}
-);
-app.get('/login', (req, res) => {
-	res.render('login');
-	}
-);
-app.get('/all-users', (req, res) =>{
-	/*Person.find((err, response) => {
-			console.log(response)
+app.get('/', (req, res) => {res.render('person')});
+app.get('/person', (req, res) => {res.render('person');});
+app.get('/login', (req, res) => {res.render('login');});
+app.get('/all-users', (req, res) => {
+	Person.find((err, response) => {
+		console.log(response)
             if(err) res.send("Error in get database");
-			else{
-				console.log(response)
-				res.render('all-users', {users:response});
-			}
-      });
-	  */
-	  res.render('all-users', {users:[{"name": "u1"}, {"name": "u2"}]});     
+		else {
+                  res.render('all-users', {users: response});
+		}
+      })
 	}
-);
+)
+app.delete('/all-users/:name', function(req, res){
+      console.log("del")
+      Person.findOneAndRemove(req.params.name, function(err, response){
+            if(err)
+                  res.json({message: "Error in deleting record name " + req.params.name});
+            else
+                  res.json({message: "Person with name " + req.params.name + " removed."});
+      })
+})
 
-app.post('/person', function(req, res){
+app.post('/person', (req, res) => {
    let personInfo = req.body; //Get the parsed information
    console.log(personInfo)
 
@@ -60,22 +57,27 @@ app.post('/person', function(req, res){
       let newPerson = new Person({
          name: personInfo.name,
          pwd: personInfo.pwd,
-      });
+      })
 		
-      newPerson.save(function(err, Person){
+      newPerson.save((err, Person) => {
          if(err){
             console.log(err)
-            res.render('show_message', {message: "Database error: %s" % err, type: "error"});
+            res.render('show_message', {message: "Database error", type: "error"})
          }
          else
             res.render('show_message', {
-               message: "New user added", type: "success", person: personInfo});
-      });
+               message: "New user added", type: "success", person: personInfo})
+      })
    }
-});
-
+}
+)
+// Hook database
 mongoose.connection.on('error', (err) => {
-	if (err)	console.log("Connect to DB failed")
-	else	app.listen(3000)
-	}
+      console.log("Connect to DB failed")
+      }
+)
+mongoose.connection.on("connected", function(ref) {
+      console.log("Connected to DB!");
+      app.listen(3000)
+      }
 )
