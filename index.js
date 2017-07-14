@@ -44,7 +44,7 @@ app.get('/all-users', (req, res) =>{
 			}
       });
 	  */
-	  res.render('all-users', {users:[{"name": "u1"}]});     
+	  res.render('all-users', {users:[{"name": "u1"}, {"name": "u2"}]});     
 	}
 );
 
