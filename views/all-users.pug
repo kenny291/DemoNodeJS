@@ -5,7 +5,7 @@ block content
 		function delUser(name){
 			$.ajax({
 				type: "DELETE",
-				url: "/all-users" + name,
+				url: "/all-users/" + name,
 				success: function (result) {
 					alert(result);
 				}
@@ -19,5 +19,4 @@ block content
 				li.list-group-item= user.name
 					span.pull-right
 						span.badge Normal user
-						span.button.glyphicon.glyphicon-trash(id = "trash-" + user.name)
-						//, onclick="delUser(" + user.name + ")")						
+						span.button.glyphicon.glyphicon-trash(onclick="delUser(" + user.name + ")")
