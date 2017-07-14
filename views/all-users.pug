@@ -7,4 +7,6 @@ block content
 			each user in users
 				// note for equal sign
 				li.list-group-item= user.name
-					span.badge Normal user
+					span.pull-right
+						span.badge Normal user
+						span.button.glyphicon.glyphicon-trash(onclick="alert('Delete user: " + user.name + "')")
