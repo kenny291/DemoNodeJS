@@ -1,14 +1,16 @@
 extends layout
 block content
 	include nav.pug
-	//- script.
-	//- 	function delUser(userName) {
-	//- 	console.log(12)
-	//- 	let r = confirm("Delete user: " + userName)
-	//- 	if (r == true) 
-	//- 		document.location.href = "/all-users/" + userName;
-	//- 	}
-
+	script.		
+		function delUser(name){
+			$.ajax({
+				type: "DELETE",
+				url: "/all-users" + name,
+				success: function (result) {
+					alert(result);
+				}
+			})			
+		}		
 	main.container
 		h2 List all current users
 		ul.list-group
@@ -17,7 +19,5 @@ block content
 				li.list-group-item= user.name
 					span.pull-right
 						span.badge Normal user
-						span.button.glyphicon.glyphicon-trash(onclick="location.href='/all-users/" + user.name + "'", method = "DELETE")
-						//- onclick="location.href='http://www.example.com'"
-						//- span.button.glyphicon.glyphicon-trash(onclick="delUser(" + user.name + ")")
-						//- (onclick="alert('Delete user: " + user.name + "')")
+						span.button.glyphicon.glyphicon-trash(id = "trash-" + user.name)
+						//, onclick="delUser(" + user.name + ")")						

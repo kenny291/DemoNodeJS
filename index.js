@@ -21,13 +21,12 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(express.static('public'));
 
-//Routes
+// Routes
 app.get('/', (req, res) => {res.render('person')});
 app.get('/person', (req, res) => {res.render('person');});
 app.get('/login', (req, res) => {res.render('login');});
 app.get('/all-users', (req, res) => {
 	Person.find((err, response) => {
-		console.log(response)
             if(err) res.send("Error in get database");
 		else {
                   res.render('all-users', {users: response});
@@ -35,8 +34,10 @@ app.get('/all-users', (req, res) => {
       })
 	}
 )
-app.delete('/all-users/:name', function(req, res){
-      console.log("del")
+
+// Delete user API
+app.delete('/all-users/:name', (req, res) => {
+      console.log(req)
       Person.findOneAndRemove(req.params.name, function(err, response){
             if(err)
                   res.json({message: "Error in deleting record name " + req.params.name});
@@ -45,6 +46,7 @@ app.delete('/all-users/:name', function(req, res){
       })
 })
 
+// Add user API
 app.post('/person', (req, res) => {
    let personInfo = req.body; //Get the parsed information
    console.log(personInfo)
@@ -73,7 +75,7 @@ app.post('/person', (req, res) => {
 )
 // Hook database
 mongoose.connection.on('error', (err) => {
-      console.log("Connect to DB failed")
+      if (err) console.log("Connect to DB failed")
       }
 )
 mongoose.connection.on("connected", function(ref) {
