@@ -1,13 +1,20 @@
+/* 
+execution: node index.js
+ref: https://www.guru99.com/node-js-express.html
+     https://www.tutorialspoint.com/nodejs/nodejs_restful_api.htm
+*/
+
 let express = require('express');
 let mongoose = require('mongoose');
 let bodyParser = require('body-parser');
+let things = require('./things.js')
 
 let app = express();
 
-app.set('view engine', 'pug');
+app.set('view engine', 'pug'  );
 
 // DB process
-mongoose.connect('mongodb://localhost/mydb', {useMongoClient: true});
+mongoose.connect(process.env.DATABASE, {useMongoClient: true});
 let personSchema = mongoose.Schema(
       {
 	   name: String,
@@ -19,21 +26,8 @@ let Person = mongoose.model("Person", personSchema);
 // Accept Post
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-app.use(express.static('public'));
-
-// Routes
-app.get('/', (req, res) => {res.render('person')});
-app.get('/person', (req, res) => {res.render('person');});
-app.get('/login', (req, res) => {res.render('login');});
-app.get('/all-users', (req, res) => {
-	Person.find((err, response) => {
-            if(err) res.send("Error in get database");
-		else {
-                  res.render('all-users', {users: response});
-		}
-      })
-	}
-)
+app.use(express.static('public')); //access http://localhost:3000/img/download.png
+app.use('/', things)
 
 // Delete user API
 app.delete('/all-users/:name', (req, res) => {
@@ -53,7 +47,7 @@ app.post('/person', (req, res) => {
 
    if(!personInfo.name || !personInfo.pwd){
       res.render('show_message', {
-         message: "Sorry, you provided wrong info", type: "error"});
+            message: "Sorry, you provided wrong info", type: "error"});
    }
    else {
       let newPerson = new Person({
